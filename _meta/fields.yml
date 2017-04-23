@@ -1,0 +1,32 @@
+- key: lsbucketbeat
+  title: lsbucketbeat
+  description:
+  fields:
+    - name: bucket.title
+      type: keyword
+      description: >
+        The name of the bucket as specified in the configuration file.
+    - name: error
+      type: text
+      description: >
+        Describes an error that occurred while scanning the bucket.
+    - name: file.path
+      type: keyword
+      description: >
+        Path to the file found in the bucket.
+    - name: file.dir
+      type: keyword
+      description: >
+        Directory containing the file found in the bucket.
+    - name: file.name
+      type: keyword
+      description: >
+        Name of the file found in the bucket.
+    - name: file.size
+      type: long
+      description: >
+        Size of the file found in the bucket.
+    - name: file.modTime
+      type: date
+      description: >
+        Modification time of the file found in the bucket.
