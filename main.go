@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	err := beat.Run("lsbucketbeat", "", beater.New)
+	err := beat.Run("lsbucketbeat", "0.1.0", beater.New)
 	if err != nil {
 		os.Exit(1)
 	}
