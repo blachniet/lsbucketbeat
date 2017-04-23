@@ -1,119 +1,48 @@
-# Lsbucketbeat
+# lsbucketbeat
 
-Welcome to Lsbucketbeat.
+`lsbucketbeat` sends information about files in a directory to Elasticsearch.
 
-Ensure that this folder is at the following location:
-`${GOPATH}/github.com/blachniet/lsbucketbeat`
+## Getting Started
 
-## Getting Started with Lsbucketbeat
+`lsbucketbeat` groups files into **buckets**. A bucket is given a title, points to a directory and has a file pattern associated with it. For example:
 
-### Requirements
-
-* [Golang](https://golang.org/dl/) 1.7
-
-### Init Project
-To get running with Lsbucketbeat and also install the
-dependencies, run the following command:
-
-```
-make setup
+```yaml
+lsbucketbeat:
+  period: 1m
+  buckets:
+    - title: "My Markdown Files"
+      dir: "/Users/johndoe/Documents"
+      filePattern: "*.md"
+      retryCount: 3
+      retryDelay: 1s
 ```
 
-It will create a clean git history for each major step. Note that you can always rewrite the history if you wish before pushing your changes.
+This configuration defines a single bucket. Every 1 minute, the `/Users/johndoe/Documents` directory is scanned for files matching the `*.md` pattern. A document is created for each file matching this pattern.
 
-To push Lsbucketbeat in the git repository, run the following commands:
-
-```
-git remote set-url origin https://github.com/blachniet/lsbucketbeat
-git push origin master
-```
-
-For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
-
-### Build
-
-To build the binary for Lsbucketbeat run the command below. This will generate a binary
-in the same directory with the name lsbucketbeat.
-
-```
-make
-```
-
-
-### Run
-
-To run Lsbucketbeat with debugging output enabled, run:
-
-```
-./lsbucketbeat -c lsbucketbeat.yml -e -d "*"
+```json
+{
+    "@timestamp": "2017-04-23T13:09:59.922Z",
+    "beat": {
+        "hostname": "Johns-Air.lan",
+        "name": "Johns-Air.lan",
+        "version": "5.3.1"
+    },
+    "bucket": {
+        "title": "My Markdown Files"
+    },
+    "file": {
+        "dir": "/Users/johndoe/Documents",
+        "modTime": "2017-04-10T22:27:48.000Z",
+        "name": "README.md",
+        "path": "/Users/johndoe/Documents/README.md",
+        "size": 234
+    },
+    "type": "lsbucketbeat"
+}
 ```
 
+See [docs/fields.asciidoc](docs/fields.asciidoc) for more details on the structure of the events.
 
-### Test
+You may have noticed the `retryCount` and `retryDelay` configuration properties in our example. These define the parameters for retrying if there are any errors while trying to scan the target directory and files.
 
-To test Lsbucketbeat, run the following command:
-
-```
-make testsuite
-```
-
-alternatively:
-```
-make unit-tests
-make system-tests
-make integration-tests
-make coverage-report
-```
-
-The test coverage is reported in the folder `./build/coverage/`
-
-### Update
-
-Each beat has a template for the mapping in elasticsearch and a documentation for the fields
-which is automatically generated based on `etc/fields.yml`.
-To generate etc/lsbucketbeat.template.json and etc/lsbucketbeat.asciidoc
-
-```
-make update
-```
-
-
-### Cleanup
-
-To clean  Lsbucketbeat source code, run the following commands:
-
-```
-make fmt
-make simplify
-```
-
-To clean up the build directory and generated artifacts, run:
-
-```
-make clean
-```
-
-
-### Clone
-
-To clone Lsbucketbeat from the git repository, run the following commands:
-
-```
-mkdir -p ${GOPATH}/github.com/blachniet/lsbucketbeat
-cd ${GOPATH}/github.com/blachniet/lsbucketbeat
-git clone https://github.com/blachniet/lsbucketbeat
-```
-
-
-For further development, check out the [beat developer guide](https://www.elastic.co/guide/en/beats/libbeat/current/new-beat.html).
-
-
-## Packaging
-
-The beat frameworks provides tools to crosscompile and package your beat for different platforms. This requires [docker](https://www.docker.com/) and vendoring as described above. To build packages of your beat, run the following command:
-
-```
-make package
-```
-
-This will fetch and create all images required for the build process. The hole process to finish can take several minutes.
+You may define as many buckets as you like in your configuration. The `bucket.title` property is the best way to differentiate between buckets in Elasticsearch.
