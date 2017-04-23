@@ -4,5 +4,6 @@
 
 .DS_Store
 /lsbucketbeat
+/lsbucketbeat.exe
 /lsbucketbeat.test
 *.pyc
