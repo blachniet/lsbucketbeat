@@ -86,11 +86,13 @@ func (bt *Lsbucketbeat) ls(bkt config.Bucket, beatname string) {
 			"error": err.Error(),
 		})
 	} else {
+		fileCount := 0
 		for _, f := range contents {
 			if f.IsDir() {
 				continue
 			}
 
+			fileCount++
 			isMatch, _ := filepath.Match(bkt.FilePattern, f.Name())
 			if isMatch {
 				bt.client.PublishEvent(common.MapStr{
@@ -109,6 +111,15 @@ func (bt *Lsbucketbeat) ls(bkt config.Bucket, beatname string) {
 				})
 			}
 		}
+
+		bt.client.PublishEvent(common.MapStr{
+			"@timestamp": common.Time(time.Now().UTC()),
+			"type":       beatname,
+			"bucket": common.MapStr{
+				"title": bkt.Title,
+			},
+			"fileCount": fileCount,
+		})
 	}
 }
 

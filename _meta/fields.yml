@@ -30,3 +30,7 @@
       type: date
       description: >
         Modification time of the file found in the bucket.
+    - name: fileCount
+      type: long
+      description: >
+        The number of files in a bucket

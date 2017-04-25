@@ -182,3 +182,11 @@ type: date
 
 Modification time of the file found in the bucket.
 
+
+[float]
+=== fileCount
+
+type: long
+
+The number of files in a bucket
+

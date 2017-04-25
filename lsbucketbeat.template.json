@@ -76,6 +76,9 @@
             }
           }
         },
+        "fileCount": {
+          "type": "long"
+        },
         "meta": {
           "properties": {
             "cloud": {
