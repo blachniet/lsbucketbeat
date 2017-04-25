@@ -92,9 +92,9 @@ func (bt *Lsbucketbeat) ls(bkt config.Bucket, beatname string) {
 				continue
 			}
 
-			fileCount++
 			isMatch, _ := filepath.Match(bkt.FilePattern, f.Name())
 			if isMatch {
+				fileCount++
 				bt.client.PublishEvent(common.MapStr{
 					"@timestamp": common.Time(time.Now().UTC()),
 					"type":       beatname,
